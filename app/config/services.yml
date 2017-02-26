@@ -1,9 +1,23 @@
-# Learn more about services, parameters and containers at
-# http://symfony.com/doc/current/service_container.html
-parameters:
-#    parameter_name: value
-
 services:
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+    question_factory:
+        class: DictionaryBundle\Entity\QuestionFactory
+
+    dictionary_mapper_factory:
+        class: DictionaryBundle\Mapper\DictionaryMapperFactory
+
+    dictionary_array_mapper:
+        class: DictionaryBundle\Mapper\DictionaryArray
+        factory: ['@dictionary_mapper_factory', createDictionaryMapper]
+        arguments: ['%kernel.root_dir%', '%dictionary_source_path%']
+
+    examination_service_factory:
+        class: DictionaryBundle\Service\ExaminationServiceFactory
+
+    examination:
+        class: DictionaryBundle\Service\ExaminationService
+        factory: ['@examination_service_factory', createSerivce]
+        arguments:
+            - '%questions_count%'
+            - '@request_stack'
+            - '@dictionary_array_mapper'
+            - '@question_factory'

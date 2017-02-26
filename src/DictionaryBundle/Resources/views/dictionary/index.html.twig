@@ -1,0 +1,48 @@
+{% extends 'DictionaryBundle::base.html.twig' %}
+
+{% block body %}
+
+    <div class="container" ng-controller="dictionaryCtrl">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h1 class="text-center">Тест на знание английского языка</h1>
+                <form class="form-inline top-buffer text-center" ng-class="{hidden: hiddenUsernameForm}">
+                    <div class="form-group">
+                        <label for="username">Ваше имя</label>
+                        <input class="form-control" id="username" ng-model="username" ng-keypress="hiddenNotification = true"/>
+                    </div>
+                    <button class="btn btn-success" ng-click="enterName()">Ok</button>
+                </form>
+
+                <h2 class="text-center" ng-class="{hidden: hiddenHello}">Привет, {{ '{{ username }}' }}!</h2>
+                <div class="alert alert-info top-buffer" ng-class="{hidden: hiddenNotification}">{{ '{{ notificationText }}' }}</div>
+                <button class="btn btn-success center-block top-buffer" ng-class="{hidden: hiddenBeginTestBtn}" ng-click="beginTest()">Начать тест</button>
+            </div>
+            <div class="top-buffer" ng-class="{'col-md-3': true, 'col-md-offset-5': true, hidden: hiddenTest}">
+                <div class="alert alert-success text-center"><strong>{{ '{{ testLanguage.question.text }}' }}</strong></div>
+
+                    <div class="radio col-md-offset-4" ng-repeat="variant in testLanguage.question.variants">
+                        <label>
+                            <input type="radio" name="answer" id="variant{{ '{{ $index }}' }}" ng-model="testLanguage.question.answer" value="{{ '{{variant}}' }}"/>
+                            {{ '{{variant}}' }}
+                        </label>
+                    </div>
+
+                <button class="btn btn-success center-block top-buffer" ng-click="checkAnswer()">Проверить</button>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{%  block javascripts %}
+    {% javascripts '@DictionaryBundle/Resources/public/js/*' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{%  endblock %}
+
+{% block stylesheets %}
+<style>
+    .top-buffer { margin-top: 20px; }
+</style>
+{% endblock %}
